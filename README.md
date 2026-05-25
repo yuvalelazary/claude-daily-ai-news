@@ -20,36 +20,16 @@ Formatted in RTL Hebrew, converted to PDF, and sent to your email automatically.
 
 ---
 
-## Setup (5 minutes)
+## Setup (3 steps)
 
 ### Step 1 — Clone the repo
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/claude-daily-ai-news.git
+git clone https://github.com/yuvalelazary/claude-daily-ai-news.git
 cd claude-daily-ai-news
 ```
 
-### Step 2 — Edit config.json
-
-Open `config.json` and fill in your details:
-
-```json
-{
-  "email": "your@gmail.com",
-  "gmail_app_password": "xxxx xxxx xxxx xxxx",
-  "schedule_time": "08:00",
-  "output_dir": "~/Desktop/ai-news"
-}
-```
-
-**How to get a Gmail App Password:**
-1. Go to [myaccount.google.com/security](https://myaccount.google.com/security)
-2. Enable 2-Step Verification if not already on
-3. Search for "App Passwords"
-4. Create a new app password → copy the 16-character code
-5. Paste it into `gmail_app_password` in config.json
-
-### Step 3 — Run setup
+### Step 2 — Run setup script
 
 **Windows (PowerShell):**
 ```powershell
@@ -60,26 +40,19 @@ Open `config.json` and fill in your details:
 ```bash
 npm install -g md-to-pdf
 cp .claude/commands/daily-ai-news.md ~/.claude/commands/daily-ai-news.md
+cp .claude/commands/setup-ai-news.md ~/.claude/commands/setup-ai-news.md
 cp .claude/ai-news-memory.json ~/.claude/ai-news-memory.json
 ```
 
-### Step 4 — Test it
+### Step 3 — Open Claude Code and type
 
-Open Claude Code in this directory and run:
 ```
-/daily-ai-news
-```
-
-You should see a PDF generated in your output folder and an email arrive in your inbox.
-
-### Step 5 — Schedule daily delivery
-
-In Claude Code, run:
-```
-/schedule
+/setup-ai-news
 ```
 
-Follow the prompts to set your preferred time (e.g. 8:00 AM every day).
+Claude will ask for your email, preferred send time, and Gmail App Password — and configure everything automatically. No manual file editing required.
+
+Once setup is complete, run `/schedule` to activate the daily routine.
 
 ---
 

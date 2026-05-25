@@ -27,7 +27,8 @@ if (-not (Test-Path $claudeCommandsDir)) {
     New-Item -ItemType Directory -Force -Path $claudeCommandsDir | Out-Null
 }
 Copy-Item ".\.claude\commands\daily-ai-news.md" "$claudeCommandsDir\daily-ai-news.md" -Force
-Write-Host "Skill installed to $claudeCommandsDir" -ForegroundColor Green
+Copy-Item ".\.claude\commands\setup-ai-news.md" "$claudeCommandsDir\setup-ai-news.md" -Force
+Write-Host "Skills installed to $claudeCommandsDir" -ForegroundColor Green
 
 # 5. Copy memory template (only if it doesn't already exist)
 $memoryFile = "$env:USERPROFILE\.claude\ai-news-memory.json"
@@ -49,6 +50,6 @@ if (-not (Test-Path $outputDir)) {
 Write-Host ""
 Write-Host "=== Setup Complete ===" -ForegroundColor Cyan
 Write-Host "Next steps:" -ForegroundColor White
-Write-Host "  1. Edit config.json — add your email and Gmail App Password" -ForegroundColor White
-Write-Host "  2. Run /daily-ai-news in Claude Code to test" -ForegroundColor White
-Write-Host "  3. Use /schedule to set up the daily 8am routine" -ForegroundColor White
+Write-Host "  1. Open Claude Code in this directory" -ForegroundColor White
+Write-Host "  2. Run /setup-ai-news — Claude will configure everything for you" -ForegroundColor White
+Write-Host "  3. Run /schedule to activate the daily routine" -ForegroundColor White
