@@ -1,0 +1,26 @@
+{
+  "used_howto": [],
+  "used_skills": [],
+  "last_generated": "",
+  "howto_pool": [
+    "CLAUDE.md",
+    "Hooks",
+    "Agents",
+    "compact",
+    "Parallel tool calls",
+    "Memory system",
+    "Worktrees",
+    "MCP servers",
+    "Permission management",
+    "init"
+  ],
+  "skills_pool": [
+    "/simplify",
+    "/review",
+    "/security-review",
+    "/verify",
+    "/run",
+    "/init",
+    "/session:handoff"
+  ]
+}
