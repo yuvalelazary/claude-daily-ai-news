@@ -21,7 +21,13 @@ if (-not (Get-Command python -ErrorAction SilentlyContinue)) {
 }
 Write-Host "Python: OK" -ForegroundColor Green
 
-# 4. Copy skill to global Claude commands
+# 4. Create config.json from example if it doesn't exist
+if (-not (Test-Path ".\config.json")) {
+    Copy-Item ".\config.example.json" ".\config.json"
+    Write-Host "config.json created from example — fill in your details" -ForegroundColor Yellow
+}
+
+# 5. Copy skill to global Claude commands
 $claudeCommandsDir = "$env:USERPROFILE\.claude\commands"
 if (-not (Test-Path $claudeCommandsDir)) {
     New-Item -ItemType Directory -Force -Path $claudeCommandsDir | Out-Null
@@ -30,7 +36,7 @@ Copy-Item ".\.claude\commands\daily-ai-news.md" "$claudeCommandsDir\daily-ai-new
 Copy-Item ".\.claude\commands\setup-ai-news.md" "$claudeCommandsDir\setup-ai-news.md" -Force
 Write-Host "Skills installed to $claudeCommandsDir" -ForegroundColor Green
 
-# 5. Copy memory template (only if it doesn't already exist)
+# 6. Copy memory template (only if it doesn't already exist)
 $memoryFile = "$env:USERPROFILE\.claude\ai-news-memory.json"
 if (-not (Test-Path $memoryFile)) {
     Copy-Item ".\.claude\ai-news-memory.json" $memoryFile
@@ -39,7 +45,7 @@ if (-not (Test-Path $memoryFile)) {
     Write-Host "Memory file already exists — skipping" -ForegroundColor Yellow
 }
 
-# 6. Create output directory from config
+# 7. Create output directory from config
 $config = Get-Content ".\config.json" | ConvertFrom-Json
 $outputDir = $config.output_dir -replace "~", $env:USERPROFILE
 if (-not (Test-Path $outputDir)) {

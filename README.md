@@ -27,7 +27,10 @@ Formatted in RTL Hebrew, converted to PDF, and sent to your email automatically.
 ```bash
 git clone https://github.com/yuvalelazary/claude-daily-ai-news.git
 cd claude-daily-ai-news
+cp config.example.json config.json
 ```
+
+> `config.json` is gitignored — your email and App Password stay local only.
 
 ### Step 2 — Run setup script
 
