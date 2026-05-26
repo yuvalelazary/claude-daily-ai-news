@@ -1,0 +1,55 @@
+name: Send Daily AI News Email
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs/yuval/**.md'
+
+jobs:
+  send-email:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send email via Resend
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: |
+          python3 << 'PYEOF'
+          import json, subprocess, os, glob
+
+          files = sorted(glob.glob('docs/yuval/AI_Daily_*.md'))
+          if not files:
+              print('No markdown files found')
+              exit(1)
+
+          content = open(files[-1], encoding='utf-8').read()
+          filename = os.path.basename(files[-1])
+          date_part = filename.replace('AI_Daily_', '').replace('.md', '').replace('_', '/')
+          api_key = os.environ['RESEND_API_KEY']
+
+          html_body = ("<html><head><meta charset='utf-8'></head>"
+                       "<body dir='rtl' style='font-family:Arial,sans-serif;direction:rtl;"
+                       "text-align:right;line-height:1.8;max-width:800px;margin:auto;padding:20px;'>"
+                       "<pre style='white-space:pre-wrap;font-family:Arial,sans-serif;'>" + content + "</pre></body></html>")
+
+          payload = {
+              'from': 'onboarding@resend.dev',
+              'to': 'yuvalelazary@gmail.com',
+              'subject': 'עדכון AI יומי — ' + date_part,
+              'html': html_body
+          }
+
+          with open('/tmp/email.json', 'w', encoding='utf-8') as f:
+              json.dump(payload, f, ensure_ascii=False)
+
+          result = subprocess.run([
+              'curl', '-s', '-X', 'POST', 'https://api.resend.com/emails',
+              '-H', f'Authorization: Bearer {api_key}',
+              '-H', 'Content-Type: application/json',
+              '--data-binary', '@/tmp/email.json'
+          ], capture_output=True, text=True)
+
+          print('Resend response:', result.stdout)
+          PYEOF
