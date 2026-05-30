@@ -1,98 +1,168 @@
-# claude-daily-ai-news
+# עדכון AI יומי — Claude Code Daily Briefing
 
-A Claude Code skill that generates a daily AI news document in Hebrew — delivered to your inbox every morning.
+קבל סיכום יומי של **חדשות AI** + **טיפ על Claude Code** + **סקיל** — ישירות למייל, כל בוקר ב-8:00.
 
-Every day you get:
-- **5 fresh AI news stories** from that day
-- **1 How To tip** for Claude Code (no repeats across days)
-- **1 useful skill** to know (no repeats across days)
-
-Formatted in RTL Hebrew, converted to PDF, and sent to your email automatically.
+כל משתמש מתחיל עם זיכרון נקי — לא משנה מתי הצטרפת.
 
 ---
 
-## Requirements
+## מה צריך
 
-- [Claude Code](https://claude.ai/code) installed
-- [Node.js](https://nodejs.org) (for md-to-pdf)
-- [Python 3](https://python.org) (for email sending)
-- A Gmail account
-
----
-
-## Setup (3 steps)
-
-### Step 1 — Clone the repo
-
-```bash
-git clone https://github.com/yuvalelazary/claude-daily-ai-news.git
-cd claude-daily-ai-news
-cp config.example.json config.json
-```
-
-> `config.json` is gitignored — your email and App Password stay local only.
-
-### Step 2 — Run setup script
-
-**Windows (PowerShell):**
-```powershell
-.\setup.ps1
-```
-
-**Mac/Linux:**
-```bash
-npm install -g md-to-pdf
-cp .claude/commands/daily-ai-news.md ~/.claude/commands/daily-ai-news.md
-cp .claude/commands/setup-ai-news.md ~/.claude/commands/setup-ai-news.md
-cp .claude/ai-news-memory.json ~/.claude/ai-news-memory.json
-```
-
-### Step 3 — Open Claude Code and type
-
-```
-/setup-ai-news
-```
-
-Claude will ask for your email, preferred send time, and Gmail App Password — and configure everything automatically. No manual file editing required.
-
-Once setup is complete, run `/schedule` to activate the daily routine.
+| כלי | שימוש | חינם? |
+|-----|-------|-------|
+| [Claude Code](https://claude.ai/download) | ליצור ולנהל את הרוטין | ✓ |
+| [GitHub](https://github.com) | לאחסן סיכומים ולהפעיל שליחת מייל | ✓ |
+| [Resend](https://resend.com) | לשלוח מיילים | ✓ (100/יום) |
 
 ---
 
-## How the no-repeat system works
+## הגדרה (10 דקות)
 
-The file `~/.claude/ai-news-memory.json` tracks which How To tips and skills have already appeared. Each day the skill picks one that hasn't been shown yet. After all 10 topics / 7 skills have been used, it resets and cycles again.
+### 1. התקן Claude Code
+כנס ל-[claude.ai/code/routines](https://claude.ai/code/routines) (אפשר בדפדפן בלי התקנה, או הורד את [Claude Code](https://claude.ai/download) ל-Mac/Windows)
 
----
+### 2. צור Resend API Key
+1. הירשם ב-[resend.com](https://resend.com)
+2. לחץ **API Keys** → **Create API Key**
+3. העתק את המפתח
 
-## Customization
+### 3. צור GitHub Personal Access Token
+1. כנס ל-[github.com/settings/tokens/new](https://github.com/settings/tokens/new)
+2. **Note:** `claude-daily-routine`
+3. **Expiration:** `No expiration`
+4. סמן ✓ **repo**
+5. לחץ **Generate token** והעתק (מופיע פעם אחת בלבד!)
 
-**Add your own How To topics:** Edit `howto_pool` in `~/.claude/ai-news-memory.json`
+### 4. צור את הרוטין
+כנס ל-[claude.ai/code/routines](https://claude.ai/code/routines) → **New Routine**
 
-**Add your own skills:** Edit `skills_pool` in the same file
+**הגדרות:**
+- **Schedule:** `0 5 * * *`
+- **Repo:** `https://github.com/yuvalelazary/claude-daily-ai-news`
+- **Model:** `claude-sonnet-4-6`
 
-**Change output language:** Edit the prompt in `.claude/commands/daily-ai-news.md`
-
----
-
-## Project structure
+**פרומפט** — העתק והחלף 4 פרטים:
 
 ```
-claude-daily-ai-news/
-├── README.md
-├── config.json                        ← fill in your details
-├── setup.ps1                          ← Windows setup script
-├── scripts/
-│   └── send-email.py                  ← email sender
-└── .claude/
-    ├── commands/
-    │   └── daily-ai-news.md           ← the skill
-    └── ai-news-memory.json            ← memory template
-```
+Generate today's daily AI news document for user: YOUR_EMAIL
+
+Follow these steps exactly:
+
+## Step 1 — Read Memory
+The memory file for this user is: .claude/memory/YOUR_NAME.json
+
+If the file does NOT exist, create it with this content and save it:
+{
+  "used_howto": [],
+  "used_skills": [],
+  "howto_pool": ["Hooks", "Agents", "compact", "Parallel tool calls", "Memory system", "Worktrees", "MCP servers", "Permission management", "init"],
+  "skills_pool": ["/review", "/security-review", "/verify", "/run", "/init"],
+  "last_generated": ""
+}
+
+If it exists, read it and extract: used_howto, used_skills, howto_pool, skills_pool.
+
+## Step 2 — Pick Fresh Content
+Select ONE topic from howto_pool NOT in used_howto.
+Select ONE skill from skills_pool NOT in used_skills.
+If all items in a pool are used, reset that pool's used list to [] and start over.
+
+How To topics guide:
+- Hooks: automatic commands that run before/after every tool Claude uses
+- Agents: sending sub-tasks to a separate agent to protect main context
+- compact: the /compact command that compresses context when it grows too large
+- Parallel tool calls: running multiple tools simultaneously to save time
+- Memory system: the ~/.claude/memory/ folder that persists info across sessions
+- Worktrees: working on multiple git branches simultaneously without switching
+- MCP servers: connecting external tools (Slack, GitHub, databases) to Claude Code
+- Permission management: pre-approving safe commands so Claude doesn't ask every time
+- init: the /init command that auto-generates a CLAUDE.md from an existing project
+
+Skills guide:
+- /review: full code review of current branch before opening a PR
+- /security-review: security audit of all changes on the branch
+- /verify: runs the app and visually confirms a feature works
+- /run: launches the project and observes real behavior
+- /init: creates CLAUDE.md automatically from the existing project structure
+
+## Step 3 — Search Today's News
+Use WebSearch for: 'AI news today [current date]' and 'site:the-decoder.com AI [current date]'.
+Pick 5 important stories from TODAY only.
+
+## Step 4 — Write the Document
+Compute today's date. Save the file to: docs/YOUR_EMAIL/AI_Daily_DD_MM_YYYY.md
+Create the docs/YOUR_EMAIL/ directory if it doesn't exist.
+
+Write the file with this exact structure:
+
+# עדכון AI יומי — [DATE IN HEBREW]
+
+> מקורות: [The Decoder](https://the-decoder.com) · [Build Fast With AI](https://www.buildfastwithai.com)
 
 ---
 
-## Credits
+## חדשות היום
 
-Built by [yuvalelazary](https://github.com/yuvalelazary)  
-Session handoff skill by [qdhenry](https://github.com/qdhenry/Claude-Command-Suite)
+[5 news stories — headline + 2-3 sentences each in Hebrew]
+
+---
+
+## How To — Claude Code
+
+### [SELECTED HOWTO TOPIC IN HEBREW]
+
+[Detailed explanation in Hebrew — minimum 150 words.]
+
+---
+
+## סקיל שכדאי להכיר
+
+### [SELECTED SKILL]
+
+[Explanation in Hebrew — minimum 100 words.]
+
+---
+
+*עודכן: [DATE]*
+
+## Step 5 — Update Memory
+Add selected howto topic to used_howto.
+Add selected skill to used_skills.
+Update last_generated to today's date.
+Write back to .claude/memory/YOUR_NAME.json
+
+## Step 6 — Commit and Push
+Run:
+git config user.email 'routine@claude.ai'
+git config user.name 'Claude Daily Routine'
+git remote set-url origin https://YOUR_GITHUB_PAT@github.com/yuvalelazary/claude-daily-ai-news
+git add -A
+git commit -m 'Daily AI news: YOUR_NAME [DATE]'
+git push origin master
+
+## Rules
+- All document text in Hebrew (except code blocks and tool names)
+- Never repeat a topic or skill already in this user's used lists
+- Always commit and push — this triggers the GitHub Action that sends the email
+- News must be from TODAY only
+```
+
+**4 פרטים להחליף:**
+
+| מה | במה להחליף |
+|-----|---------------|
+| `YOUR_EMAIL` | המייל שלך (`david@gmail.com`) |
+| `YOUR_NAME` | שם קצר באנגלית ללא רווחים (`david`) |
+| `YOUR_GITHUB_PAT` | ה-Token מ-GitHub |
+| `YOUR_RESEND_API_KEY` | לא רלוונטי לפרומפט, רק ל-Resend |
+
+### 5. סמן "Not Spam"
+המייל הראשון יגיע לספאם — סמן אותו **Not spam** ומהמייל השני יגיע לתיבה הראשית.
+
+---
+
+## איך זה עובד
+
+```
+Claude Routine (08:00) → כותב סיכום → דוחף ל-GitHub → GitHub Action → Resend → המייל שלך
+```
