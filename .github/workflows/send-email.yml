@@ -4,13 +4,15 @@ on:
   push:
     branches: [master]
     paths:
-      - 'docs/yuval/**.md'
+      - 'docs/**/*.md'
 
 jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Send email via Resend
         env:
@@ -18,38 +20,47 @@ jobs:
         run: |
           python3 << 'PYEOF'
           import json, subprocess, os, glob
+          from datetime import date
 
-          files = sorted(glob.glob('docs/yuval/AI_Daily_*.md'))
-          if not files:
-              print('No markdown files found')
-              exit(1)
+          # Find files changed in this push
+          diff = subprocess.run(['git', 'diff', '--name-only', 'HEAD^', 'HEAD'],
+                                capture_output=True, text=True).stdout.strip().split('\n')
+          ai_files = [f for f in diff if f.startswith('docs/') and 'AI_Daily_' in f and f.endswith('.md')]
 
-          content = open(files[-1], encoding='utf-8').read()
-          filename = os.path.basename(files[-1])
-          date_part = filename.replace('AI_Daily_', '').replace('.md', '').replace('_', '/')
+          # Fallback: today's files
+          if not ai_files:
+              today = date.today().strftime('%d_%m_%Y')
+              ai_files = glob.glob(f'docs/*/AI_Daily_{today}.md')
+
           api_key = os.environ['RESEND_API_KEY']
 
-          html_body = ("<html><head><meta charset='utf-8'></head>"
-                       "<body dir='rtl' style='font-family:Arial,sans-serif;direction:rtl;"
-                       "text-align:right;line-height:1.8;max-width:800px;margin:auto;padding:20px;'>"
-                       "<pre style='white-space:pre-wrap;font-family:Arial,sans-serif;'>" + content + "</pre></body></html>")
+          for filepath in ai_files:
+              user_email = filepath.split('/')[1]
+              content = open(filepath, encoding='utf-8').read()
+              date_part = os.path.basename(filepath).replace('AI_Daily_', '').replace('.md', '').replace('_', '/')
 
-          payload = {
-              'from': 'onboarding@resend.dev',
-              'to': 'yuvalelazary@gmail.com',
-              'subject': 'עדכון AI יומי — ' + date_part,
-              'html': html_body
-          }
+              html_body = ("<html><head><meta charset='utf-8'></head>"
+                           "<body dir='rtl' style='font-family:Arial,sans-serif;direction:rtl;"
+                           "text-align:right;line-height:1.8;max-width:800px;margin:auto;padding:20px;'>"
+                           "<pre style='white-space:pre-wrap;font-family:Arial,sans-serif;'>"
+                           + content + "</pre></body></html>")
 
-          with open('/tmp/email.json', 'w', encoding='utf-8') as f:
-              json.dump(payload, f, ensure_ascii=False)
+              payload = {
+                  'from': 'onboarding@resend.dev',
+                  'to': user_email,
+                  'subject': 'עדכון AI יומי — ' + date_part,
+                  'html': html_body
+              }
 
-          result = subprocess.run([
-              'curl', '-s', '-X', 'POST', 'https://api.resend.com/emails',
-              '-H', f'Authorization: Bearer {api_key}',
-              '-H', 'Content-Type: application/json',
-              '--data-binary', '@/tmp/email.json'
-          ], capture_output=True, text=True)
+              with open('/tmp/email.json', 'w', encoding='utf-8') as f:
+                  json.dump(payload, f, ensure_ascii=False)
 
-          print('Resend response:', result.stdout)
+              result = subprocess.run([
+                  'curl', '-s', '-X', 'POST', 'https://api.resend.com/emails',
+                  '-H', f'Authorization: Bearer {api_key}',
+                  '-H', 'Content-Type: application/json',
+                  '--data-binary', '@/tmp/email.json'
+              ], capture_output=True, text=True)
+
+              print(f'Sent to {user_email}: {result.stdout}')
           PYEOF
