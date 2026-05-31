@@ -16,11 +16,11 @@
 
 ---
 
-## הגדרה
+## הגrרה
 
 ### 1. Fork את ה-Repo
 
-לחץ **Fork** בפינה הימנית העליונה של הדף הזה.
+לחץ **Fork** בפינה הימנית העליונה של הדף הRepo.
 זה יוצר עותק שלך בכתובת `https://github.com/YOUR_GITHUB_USERNAME/claude-daily-ai-news`.
 
 ---
