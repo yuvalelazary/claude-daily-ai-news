@@ -90,8 +90,8 @@ Use WebSearch for: 'AI news today [current date]' and 'site:the-decoder.com AI [
 Pick 5 important stories from TODAY only.
 
 ## Step 4 — Write the Document
-Compute today's date. Save the file to: docs/YOUR_EMAIL/AI_Daily_DD_MM_YYYY.md
-Create the docs/YOUR_EMAIL/ directory if it doesn't exist.
+Compute today's date. Save the file to: docs/YOUR_NAME/AI_Daily_DD_MM_YYYY.md
+Create the docs/YOUR_NAME/ directory if it doesn't exist.
 
 Write the file with this exact structure:
 
@@ -147,14 +147,15 @@ git push origin master
 - News must be from TODAY only
 ```
 
-**4 פרטים להחליף:**
+**3 פרטים להחליף:**
 
-| מה | במה להחליף |
-|-----|---------------|
-| `YOUR_EMAIL` | המייל שלך (`david@gmail.com`) |
-| `YOUR_NAME` | שם קצר באנגלית ללא רווחים (`david`) |
-| `YOUR_GITHUB_PAT` | ה-Token מ-GitHub |
-| `YOUR_RESEND_API_KEY` | לא רלוונטי לפרומפט, רק ל-Resend |
+| מה | במה להחליף | איפה מופיע |
+|-----|---------------|------------|
+| `YOUR_EMAIL` | המייל שלך (`david@gmail.com`) | שורה ראשונה של הפרומפט |
+| `YOUR_NAME` | שם קצר באנגלית ללא רווחים (`david`) | נתיב הזיכרון, תיקיית הפלט, הקומיט |
+| `YOUR_GITHUB_PAT` | ה-Token מ-GitHub | שורת `git remote set-url` |
+
+> **הרשאות:** ה-repo כבר כולל `.claude/settings.json` עם הרשאות מלאות לרוטין — אין צורך להגדיר כלום נוסף.
 
 ### 5. סמן "Not Spam"
 המייל הראשון יגיע לספאם — סמן אותו **Not spam** ומהמייל השני יגיע לתיבה הראשית.
