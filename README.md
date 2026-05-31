@@ -1,8 +1,8 @@
 # עדכון AI יומי — Claude Code Daily Briefing
 
-קבל סיכום יומי של **חדשות AI** + **טיפ על Claude Code** + **סקיל** — ישירות למייל, כל בוקר ב-8:00.
+קבל סיכום יומי של **חדשות AI** + **טיפ על Claude Code** + **סקיל** — ישירות למייל, כל בוקר.
 
-כל משתמש מתחיל עם זיכרון נקי — לא משנה מתי הצטרפת.
+כל משתמש מקבל תוכן שונה מדי יום — הרוטין זוכר מה כבר נשלח ולא חוזר על עצמו.
 
 ---
 
@@ -10,35 +10,80 @@
 
 | כלי | שימוש | חינם? |
 |-----|-------|-------|
-| [Claude Code](https://claude.ai/download) | ליצור ולנהל את הרוטין | ✓ |
 | [GitHub](https://github.com) | לאחסן סיכומים ולהפעיל שליחת מייל | ✓ |
 | [Resend](https://resend.com) | לשלוח מיילים | ✓ (100/יום) |
+| [claude.ai/code](https://claude.ai/code) | להריץ את הרוטין היומי | ✓ |
 
 ---
 
-## הגדרה (10 דקות)
+## הגדרה
 
-### 1. התקן Claude Code
-כנס ל-[claude.ai/code/routines](https://claude.ai/code/routines) (אפשר בדפדפן בלי התקנה, או הורד את [Claude Code](https://claude.ai/download) ל-Mac/Windows)
+### 1. Fork את ה-Repo
+
+לחץ **Fork** בפינה הימנית העליונה של הדף הזה.
+זה יוצר עותק שלך בכתובת `https://github.com/YOUR_GITHUB_USERNAME/claude-daily-ai-news`.
+
+---
 
 ### 2. צור Resend API Key
+
 1. הירשם ב-[resend.com](https://resend.com)
 2. לחץ **API Keys** → **Create API Key**
 3. העתק את המפתח
 
-### 3. צור GitHub Personal Access Token
+---
+
+### 3. הוסף את המפתח כ-GitHub Secret
+
+ב-repo שלך (לאחר ה-Fork):
+
+1. לחץ **Settings** → **Secrets and variables** → **Actions**
+2. לחץ **New repository secret**
+3. **Name:** `RESEND_API_KEY`
+4. **Secret:** הדבק את המפתח מ-Resend
+5. לחץ **Add secret**
+
+---
+
+### 4. הוסף את עצמך ל-EMAIL_MAP
+
+פתח את הקובץ `.github/workflows/send-email.yml` ב-repo שלך ומצא את השורות:
+
+```python
+EMAIL_MAP = {
+    "yuval": "yuvalelazary@gmail.com",
+}
+```
+
+החלף בפרטים שלך:
+
+```python
+EMAIL_MAP = {
+    "YOUR_NAME": "YOUR_EMAIL",
+}
+```
+
+שמור ודחף.
+
+---
+
+### 5. צור GitHub Personal Access Token
+
 1. כנס ל-[github.com/settings/tokens/new](https://github.com/settings/tokens/new)
 2. **Note:** `claude-daily-routine`
 3. **Expiration:** `No expiration`
 4. סמן ✓ **repo**
 5. לחץ **Generate token** והעתק (מופיע פעם אחת בלבד!)
 
-### 4. צור את הרוטין
-כנס ל-[claude.ai/code/routines](https://claude.ai/code/routines) → **New Routine**
+---
+
+### 6. צור את הרוטין ב-Claude Code
+
+כנס ל-[claude.ai/code](https://claude.ai/code) → **Routines** → **New Routine**
 
 **הגדרות:**
-- **Schedule:** `0 5 * * *`
-- **Repo:** `https://github.com/yuvalelazary/claude-daily-ai-news`
+- **Schedule:** `0 5 * * *` (08:00 שעון ישראל)
+- **Repo:** `https://github.com/YOUR_GITHUB_USERNAME/claude-daily-ai-news`
 - **Model:** `claude-sonnet-4-6`
 
 **פרומפט** — העתק והחלף 4 פרטים:
@@ -135,7 +180,7 @@ Write back to .claude/memory/YOUR_NAME.json
 Run:
 git config user.email 'routine@claude.ai'
 git config user.name 'Claude Daily Routine'
-git remote set-url origin https://YOUR_GITHUB_PAT@github.com/yuvalelazary/claude-daily-ai-news
+git remote set-url origin https://YOUR_GITHUB_PAT@github.com/YOUR_GITHUB_USERNAME/claude-daily-ai-news
 git add -A
 git commit -m 'Daily AI news: YOUR_NAME [DATE]'
 git push origin master
@@ -147,18 +192,22 @@ git push origin master
 - News must be from TODAY only
 ```
 
-**3 פרטים להחליף:**
+**4 פרטים להחליף:**
 
 | מה | במה להחליף | איפה מופיע |
 |-----|---------------|------------|
-| `YOUR_EMAIL` | המייל שלך (`david@gmail.com`) | שורה ראשונה של הפרומפט |
-| `YOUR_NAME` | שם קצר באנגלית ללא רווחים (`david`) | נתיב הזיכרון, תיקיית הפלט, הקומיט |
-| `YOUR_GITHUB_PAT` | ה-Token מ-GitHub | שורת `git remote set-url` |
+| `YOUR_EMAIL` | המייל שלך (`david@gmail.com`) | שורה ראשונה + EMAIL_MAP |
+| `YOUR_NAME` | שם קצר באנגלית ללא רווחים (`david`) | זיכרון, תיקיית פלט, קומיט, EMAIL_MAP |
+| `YOUR_GITHUB_USERNAME` | שם המשתמש שלך ב-GitHub | כתובת ה-repo, שורת `git remote` |
+| `YOUR_GITHUB_PAT` | ה-Token מ-GitHub (שלב 5) | שורת `git remote set-url` |
 
-> **הרשאות:** ה-repo כבר כולל `.claude/settings.json` עם הרשאות מלאות לרוטין — אין צורך להגדיר כלום נוסף.
+> **הרשאות:** ה-repo כבר כולל `.claude/settings.json` עם כל הרשאות הרוטין — אין צורך להגדיר כלום נוסף.
 
-### 5. סמן "Not Spam"
-המייל הראשון יגיע לספאם — סמן אותו **Not spam** ומהמייל השני יגיע לתיבה הראשית.
+---
+
+### 7. סמן "Not Spam"
+
+המייל הראשון עשוי להגיע לספאם — סמן **Not spam** וממייל שני יגיע לתיבה הראשית.
 
 ---
 
