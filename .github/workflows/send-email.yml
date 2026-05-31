@@ -35,7 +35,15 @@ jobs:
           api_key = os.environ['RESEND_API_KEY']
 
           for filepath in ai_files:
-              user_email = filepath.split('/')[1]
+                            EMAIL_MAP = {
+                  "yuval": "yuvalelazary@gmail.com",
+              }
+              user_name = filepath.split('/')[1]
+              user_email = EMAIL_MAP.get(user_name)
+              if not user_email:
+                  print(f'No email mapping for: {user_name}, skipping')
+                  continue
+
               content = open(filepath, encoding='utf-8').read()
               date_part = os.path.basename(filepath).replace('AI_Daily_', '').replace('.md', '').replace('_', '/')
 
