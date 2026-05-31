@@ -35,7 +35,6 @@ jobs:
           api_key = os.environ['RESEND_API_KEY']
           EMAIL_MAP = {
                   "yuval": "yuvalelazary@gmail.com",
-                  "yuval2": "Ywbl8057@gmail.com",
               }
           for filepath in ai_files:
               user_name = filepath.split('/')[1]
