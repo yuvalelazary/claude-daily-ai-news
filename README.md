@@ -73,7 +73,8 @@ EMAIL_MAP = {
 2. **Note:** `claude-daily-routine`
 3. **Expiration:** `No expiration`
 4. סמן ✓ **repo**
-5. לחץ **Generate token** והעתק (מופיע פעם אחת בלבד!)
+5. סמן ✓ **workflow** (נדרש כדי לדחוף שינויים לקבצי GitHub Actions)
+6. לחץ **Generate token** והעתק (מופיע פעם אחת בלבד!)
 
 ---
 
