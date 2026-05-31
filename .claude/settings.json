@@ -7,7 +7,9 @@
       "Write",
       "Edit",
       "Bash(git *)",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "Bash(ls *)",
+      "Bash(find *)"
     ]
   }
 }
