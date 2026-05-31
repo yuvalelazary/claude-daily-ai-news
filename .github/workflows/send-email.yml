@@ -33,11 +33,10 @@ jobs:
               ai_files = glob.glob(f'docs/*/AI_Daily_{today}.md')
 
           api_key = os.environ['RESEND_API_KEY']
-
-          for filepath in ai_files:
-                            EMAIL_MAP = {
+          EMAIL_MAP = {
                   "yuval": "yuvalelazary@gmail.com",
               }
+          for filepath in ai_files:
               user_name = filepath.split('/')[1]
               user_email = EMAIL_MAP.get(user_name)
               if not user_email:
