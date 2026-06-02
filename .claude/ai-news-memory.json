@@ -1,7 +1,7 @@
 {
-  "used_howto": ["CLAUDE.md", "Hooks"],
-  "used_skills": ["/simplify", "/review"],
-  "last_generated": "2026-05-31",
+  "used_howto": ["CLAUDE.md", "Hooks", "Agents"],
+  "used_skills": ["/simplify", "/review", "/security-review"],
+  "last_generated": "2026-06-02",
   "howto_pool": [
     "CLAUDE.md",
     "Hooks",
