@@ -1,7 +1,7 @@
 {
-  "used_howto": ["Hooks", "Agents", "compact", "Parallel tool calls", "Memory system"],
-  "used_skills": ["/review", "/security-review", "/verify", "/run", "/init"],
+  "used_howto": ["Hooks", "Agents", "compact", "Parallel tool calls", "Memory system", "Worktrees"],
+  "used_skills": ["/review"],
   "howto_pool": ["Hooks", "Agents", "compact", "Parallel tool calls", "Memory system", "Worktrees", "MCP servers", "Permission management", "init"],
   "skills_pool": ["/review", "/security-review", "/verify", "/run", "/init"],
-  "last_generated": "2026-06-04"
+  "last_generated": "2026-06-07"
 }
